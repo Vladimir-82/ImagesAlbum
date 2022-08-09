@@ -1,4 +1,5 @@
 from PIL import Image
+from io import BytesIO
 
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -30,6 +31,10 @@ class CreateApi(generics.ListCreateAPIView):
         if serializer.is_valid():
             author_id = request.user.id
             data = serializer.data
+            print(data)
+            # im = Image.open(data['photo'])
+
+
             Post.objects.create(author_id=author_id, category_id=data['category'],
                                        title=data['title'], photo=data['photo'],
                                        body=data['body'])
