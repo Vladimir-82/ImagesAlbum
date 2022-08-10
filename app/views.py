@@ -3,6 +3,7 @@ from io import BytesIO
 
 from django.shortcuts import redirect
 from django.core.files.base import ContentFile
+from django.db.models import F
 from rest_framework import generics, permissions
 from .models import Post
 from .serializers import ViewSerializer, CreateSerializer, DetailViewSerializer
@@ -10,24 +11,32 @@ from .permissions import IsAuthorOrReadOnly
 
 
 class ViewList(generics.ListAPIView):
+    '''Returns a list of posts for all users'''
     permission_classes = (permissions.AllowAny,)
     queryset = Post.objects.all()
     serializer_class = ViewSerializer
 
 
 class DetailList(generics.RetrieveUpdateDestroyAPIView):
+    '''Returns a detailed list of publications for author or read only'''
     permission_classes = (IsAuthorOrReadOnly,)
     queryset = Post.objects.all()
     serializer_class = DetailViewSerializer
 
+    def get_object(self):
+        obj = super().get_object()
+        obj.views = F('views') + 1
+        obj.save()
+        # return obj
 
 
 class CreateApi(generics.ListCreateAPIView):
+    '''Creates a post for registered users'''
     queryset = Post.objects.all()
     serializer_class = CreateSerializer
 
-
     def post(self, request, *args, **kwargs):
+        '''resizes a photo'''
         serializer = CreateSerializer(data=request.data)
         if serializer.is_valid():
             author_id = request.user.id
@@ -49,4 +58,4 @@ class CreateApi(generics.ListCreateAPIView):
             name = ''.join(('photo_', str(post.id), '.webp'))
             post.photo_mod.save(name=name, content=ContentFile(buffer.getvalue()), save=False)
             post.save()
-            return redirect('create')
+            # return redirect('')
