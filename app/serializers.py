@@ -2,9 +2,15 @@ from rest_framework import serializers
 from .models import Post, Category
 
 
-class PostSerializer(serializers.ModelSerializer):
+class ViewSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('id', 'author', 'title', 'category', 'photo', 'photo_mod', 'body', 'created_at',)
+        fields = ('id', 'author', 'title', 'category', 'photo_mod', 'created_at', 'views')
+        model = Post
+
+
+class DetailViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ('id', 'author', 'title', 'category', 'photo', 'body', 'created_at', 'views')
         model = Post
 
 
