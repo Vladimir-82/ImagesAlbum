@@ -23,7 +23,6 @@ class DetailList(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateApi(generics.ListCreateAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
     queryset = Post.objects.all()
     serializer_class = CreateSerializer
 
