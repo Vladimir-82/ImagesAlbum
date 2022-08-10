@@ -3,23 +3,27 @@ from io import BytesIO
 
 from django.shortcuts import redirect
 from django.core.files.base import ContentFile
-from rest_framework import generics
+from rest_framework import generics, permissions
 from .models import Post
 from .serializers import ViewSerializer, CreateSerializer, DetailViewSerializer
+from .permissions import IsAuthorOrReadOnly
 
 
 class ViewList(generics.ListAPIView):
+    permission_classes = (permissions.AllowAny,)
     queryset = Post.objects.all()
     serializer_class = ViewSerializer
 
 
 class DetailList(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthorOrReadOnly,)
     queryset = Post.objects.all()
     serializer_class = DetailViewSerializer
 
 
 
 class CreateApi(generics.ListCreateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
     queryset = Post.objects.all()
     serializer_class = CreateSerializer
 
