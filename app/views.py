@@ -3,7 +3,6 @@ from io import BytesIO
 
 from django.shortcuts import redirect
 from django.core.files.base import ContentFile
-from django.db.models import F
 from rest_framework import generics, permissions
 from .models import Post
 from .serializers import ViewSerializer, CreateSerializer, DetailViewSerializer
@@ -24,10 +23,11 @@ class DetailList(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = DetailViewSerializer
 
     def get_object(self):
-        obj = super().get_object()
-        obj.views = F('views') + 1
-        obj.save()
-        # return obj
+        '''Increases the number of views'''
+        object = super().get_object()
+        object.views += 1
+        object.save()
+        return object
 
 
 class CreateApi(generics.ListCreateAPIView):
@@ -58,4 +58,10 @@ class CreateApi(generics.ListCreateAPIView):
             name = ''.join(('photo_', str(post.id), '.webp'))
             post.photo_mod.save(name=name, content=ContentFile(buffer.getvalue()), save=False)
             post.save()
-            # return redirect('')
+            return redirect('create')
+
+
+class ViewTop3List(generics.ListAPIView):
+    '''Returns a list of top 3 posts'''
+    queryset = Post.objects.order_by('-views', 'created_at')[:3]
+    serializer_class = ViewSerializer
