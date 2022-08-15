@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+
+
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     category = models.ForeignKey('Category', null=True, on_delete=models.PROTECT, verbose_name='Категория')
