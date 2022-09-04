@@ -9,7 +9,7 @@ app.autodiscover_tasks()
 
 
 app.conf.beat_schedule = {
-    'send-report-every-single-minute': {
+    'send-report-every-day': {
         'task': 'app.tasks.send_view_count_report',
         'schedule': crontab(minute=0, hour=0),
     },
