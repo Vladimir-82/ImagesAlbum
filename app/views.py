@@ -23,7 +23,9 @@ class DetailList(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = DetailViewSerializer
 
     def get_object(self):
-        '''Increases the number of views'''
+        '''
+        Increases the number of views
+        '''
         object = super().get_object()
         object.views += 1
         object.save()
@@ -31,12 +33,16 @@ class DetailList(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateApi(generics.ListCreateAPIView):
-    '''Creates a post for registered users'''
+    '''
+    Creates a post for registered users
+    '''
     queryset = Post.objects.all()
     serializer_class = CreateSerializer
 
     def post(self, request, *args, **kwargs):
-        '''resizes a photo'''
+        '''
+        Resizes a photo
+        '''
         serializer = CreateSerializer(data=request.data)
         if serializer.is_valid():
             author_id = request.user.id
@@ -52,16 +58,24 @@ class CreateApi(generics.ListCreateAPIView):
             image = image.resize((new_width, new_height))
             buffer = BytesIO()
             image.save(fp=buffer, format='webp')
-            post = Post.objects.create(author_id=author_id, category_id=data['category'],
-                                       title=data['title'], photo=data['photo'],
-                                       body=data['body'])
+            post = Post.objects.create(author_id=author_id,
+                                       category_id=data['category'],
+                                       title=data['title'],
+                                       photo=data['photo'],
+                                       body=data['body']
+                                       )
             name = ''.join(('photo_', str(post.id), '.webp'))
-            post.photo_mod.save(name=name, content=ContentFile(buffer.getvalue()), save=False)
+            post.photo_mod.save(name=name,
+                                content=ContentFile(buffer.getvalue()),
+                                save=False
+                                )
             post.save()
             return redirect('create')
 
 
 class ViewTop3List(generics.ListAPIView):
-    '''Returns a list of top 3 posts'''
+    '''
+    Returns a list of top 3 posts
+    '''
     queryset = Post.objects.order_by('-views', 'created_at')[:3]
     serializer_class = ViewSerializer
