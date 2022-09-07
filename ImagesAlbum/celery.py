@@ -13,4 +13,8 @@ app.conf.beat_schedule = {
         'task': 'app.tasks.send_view_count_report',
         'schedule': crontab(minute=0, hour=0),
     },
+    'send-report-every-minute': {
+        'task': 'app.tasks.send_join_lieve_top',
+        'schedule': crontab(),
+    }
 }
