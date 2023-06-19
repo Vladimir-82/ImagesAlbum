@@ -1,6 +1,7 @@
 amqp==2.6.1
 asgiref==3.5.2
 async-timeout==4.0.2
+autopep8==2.0.2
 backports.zoneinfo==0.2.1
 billiard==3.6.4.0
 celery==4.4.7
@@ -19,10 +20,12 @@ Deprecated==1.2.13
 dj-rest-auth==2.2.5
 Django==4.1
 django-allauth==0.51.0
+django-silk==5.0.3
 djangorestframework==3.13.1
 drf-yasg==1.21.3
 environs==9.5.0
 flower==0.9.7
+gprof2dot==2022.7.29
 humanize==4.3.0
 idna==3.3
 inflection==0.5.1
@@ -36,6 +39,7 @@ packaging==21.3
 Pillow==9.2.0
 prometheus-client==0.8.0
 prompt-toolkit==3.0.30
+pycodestyle==2.10.0
 pycparser==2.21
 PyJWT==2.4.0
 pyparsing==3.0.9
@@ -49,6 +53,7 @@ ruamel.yaml==0.17.21
 ruamel.yaml.clib==0.2.6
 six==1.16.0
 sqlparse==0.4.2
+tomli==2.0.1
 tornado==6.2
 tzdata==2022.1
 uritemplate==4.1.1
