@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from django.core.files.base import ContentFile
 from rest_framework import generics, permissions
 from .models import Post
-from .serializers import ViewSerializer, CreateSerializer, DetailViewSerializer
+from .serializers import *
 from .permissions import IsAuthorOrReadOnly
 
 
@@ -78,4 +78,5 @@ class ViewTop3List(generics.ListAPIView):
     Returns a list of top 3 posts
     '''
     queryset = Post.objects.order_by('-views', 'created_at')[:3]
-    serializer_class = ViewSerializer
+    serializer_class = ViewTop3Serializer
+
