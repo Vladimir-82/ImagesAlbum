@@ -21,12 +21,12 @@ class CreateSerializer(serializers.ModelSerializer):
         model = Post
 
 
+
 class ViewTop3Serializer(serializers.ModelSerializer):
 
     email = serializers.EmailField(source="author.email", read_only=True)
+    category_name = serializers.CharField(source="category.title", read_only=True)
 
     class Meta:
         fields = '__all__'
         model = Post
-
-

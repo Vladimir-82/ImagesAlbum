@@ -4,7 +4,8 @@ from io import BytesIO
 from django.shortcuts import redirect
 from django.core.files.base import ContentFile
 from rest_framework import generics, permissions
-from .models import Post
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from .serializers import *
 from .permissions import IsAuthorOrReadOnly
 
@@ -14,6 +15,7 @@ class ViewList(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     queryset = Post.objects.all()
     serializer_class = ViewSerializer
+
 
 
 class DetailList(generics.RetrieveUpdateDestroyAPIView):
@@ -79,4 +81,21 @@ class ViewTop3List(generics.ListAPIView):
     '''
     queryset = Post.objects.order_by('-views', 'created_at')[:3]
     serializer_class = ViewTop3Serializer
+
+
+class GetUserEmailsList(APIView):
+    def get(self, request):
+        queryset = Post.objects.all().select_related('author')
+        emails = {user.author.__str__(): user.author.email for user in queryset}
+        return Response(emails)
+
+
+
+
+
+
+
+
+
+
 
