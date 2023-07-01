@@ -6,6 +6,8 @@ from django.core.files.base import ContentFile
 from rest_framework import generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
+from .models import Genre
 from .serializers import *
 from .permissions import IsAuthorOrReadOnly
 
@@ -85,17 +87,32 @@ class ViewTop3List(generics.ListAPIView):
 
 class GetUserEmailsList(APIView):
     def get(self, request):
+        """юзер - mail"""
         queryset = Post.objects.all().select_related('author')
-        emails = {user.author.__str__(): user.author.email for user in queryset}
+        emails = {user.author.username: user.author.email for user in queryset}
         return Response(emails)
 
 
 
+# class GetUserGenreList(APIView):
+#     def get(self, request):
+#         queryset = Genre.objects.prefetch_related("publications")
+#         dc = {}
+#         for query in queryset:
+#             for el in query.publications.values():
+#                 dc.setdefault(query.title, []).append(el["title"])
+#
+#         return Response(dc)
 
 
 
+class GetUserGenreList(APIView):
+    def get(self, request):
+        """жанры - соостветстветствующие посты!!!"""
+        dc = {}
+        queryset = Genre.objects.prefetch_related("publications")
+        for ganre in queryset:
+            posts = [post.title for post in ganre.publications.all()]
+            dc.setdefault(ganre.title, posts)
 
-
-
-
-
+        return Response(dc)

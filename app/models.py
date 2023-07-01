@@ -46,3 +46,20 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
         ordering = ['title']
+
+
+
+class Genre(models.Model):
+    title = models.CharField(max_length=150,
+                             verbose_name='Наименование жанра'
+                             )
+    publications = models.ManyToManyField(Post)
+
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Жанр'
+        verbose_name_plural = 'Жанры'
+        ordering = ['title']
