@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import ViewList, DetailList, CreateApi, ViewTop3List, \
-    GetUserEmailsList, GetUserGenreList
+    GetUserEmailsList, GetUserGenreList, GetUsersGenres
 
 
 urlpatterns = [
@@ -9,7 +9,9 @@ urlpatterns = [
     path('create',  CreateApi.as_view(), name='create'),
     path('top3',  ViewTop3List.as_view(), name='top3'),
     path('user_emails', GetUserEmailsList.as_view(), name='emails'),
-    path('genres', GetUserGenreList.as_view(), name='genres')
+    path('genres', GetUserGenreList.as_view(), name='genres'),
+    path('users_genres', GetUsersGenres.as_view(), name='users_genres')
+
 ]
 
 

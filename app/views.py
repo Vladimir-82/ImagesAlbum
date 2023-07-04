@@ -116,3 +116,20 @@ class GetUserGenreList(APIView):
             dc.setdefault(ganre.title, posts)
 
         return Response(dc)
+
+
+class GetUsersGenres(APIView):
+    def get(self, request):
+        """жанры - соостветстветствующие посты - текущего юзера"""
+        user = request.user
+        dc = {}
+        queryset = Genre.objects.prefetch_related("publications")
+        for ganre in queryset:
+            posts = [post.title for post in ganre.publications.filter(
+                author=user)
+                     ]
+            dc.setdefault(ganre.title, posts)
+
+        return Response(dc)
+
+
