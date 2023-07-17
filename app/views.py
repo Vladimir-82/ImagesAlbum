@@ -3,7 +3,7 @@ from io import BytesIO
 
 from django.shortcuts import redirect
 from django.core.files.base import ContentFile
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -44,6 +44,10 @@ class CreateApi(generics.ListCreateAPIView):
     serializer_class = CreateSerializer
 
     def post(self, request, *args, **kwargs):
+        """
+        model_to_dict - делает словарь из модели.
+        Применяем для post запросов!!!!!!!!!!!!!
+        """
         '''
         Resizes a photo
         '''
@@ -86,11 +90,17 @@ class ViewTop3List(generics.ListAPIView):
 
 
 class GetUserEmailsList(APIView):
+    permission_classes = (permissions.AllowAny,)
     def get(self, request):
         """юзер - mail"""
         queryset = Post.objects.all().select_related('author')
         emails = {user.author.username: user.author.email for user in queryset}
         return Response(emails)
+
+    def post(self, request):
+        """юзер - mail"""
+
+        return Response({"asd": 23})
 
 
 
@@ -132,4 +142,31 @@ class GetUsersGenres(APIView):
 
         return Response(dc)
 
+
+
+class GetSearchClient(generics.ListAPIView):
+    '''Search client'''
+    permission_classes = (permissions.AllowAny,)
+    queryset = Post.objects.all()
+    serializer_class = ViewSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title',]
+
+
+
+class IsOwnerFilterBackend(filters.BaseFilterBackend):
+    """
+    Filter that only allows users to see their own objects.
+    """
+    def filter_queryset(self, request, queryset, view):
+        return queryset.filter(author=request.user)
+
+
+class GetSearchOwnClient(generics.ListAPIView):
+    '''Search client author only'''
+    permission_classes = (permissions.AllowAny,)
+    queryset = Post.objects.all()
+    serializer_class = ViewSerializer
+    filter_backends = [IsOwnerFilterBackend,]
+    search_fields = ['title',]
 
